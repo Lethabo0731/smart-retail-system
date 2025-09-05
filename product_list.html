@@ -1,0 +1,97 @@
+<?php
+session_start();
+require_once 'helpers.php';
+$token = generate_csrf_token();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products - Smart Retail</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 900px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #333; }
+    #search { width: 100%; padding: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; }
+    #autocomplete-list { list-style: none; padding: 0; margin: 0 0 20px 0; max-height: 150px; overflow-y: auto; border: 1px solid #ccc; border-radius: 4px; }
+    #autocomplete-list li { padding: 8px; cursor: pointer; }
+    #autocomplete-list li:hover { background: #e0e0e0; }
+    .product-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+    .product-card { background: #fafafa; padding: 15px; border-radius: 6px; text-align: center; box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
+    .product-card img { width: 100%; height: 180px; object-fit: contain; border-radius: 4px; }
+    .product-card h3 { margin: 10px 0; color: #333; }
+    .product-card p { margin: 5px 0; color: #666; }
+    .product-card button { padding: 8px 12px; border: none; border-radius: 4px; background: #007bff; color: #fff; cursor: pointer; }
+    .product-card button:hover { background: #0056b3; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Available Products</h2>
+    <input type="text" id="search" placeholder="Search products..." autocomplete="off">
+    <ul id="autocomplete-list"></ul>
+
+    <div class="product-list">
+        <div class="product-card" data-name="Classic Tee" data-price="19.99">
+            <img src="https://cdn.mos.cms.futurecdn.net/whowhatwear/posts/222220/best-vintage-t-shirts-222220-1627335452753-main.jpg?interlace=true&quality=70" alt="Classic Tee">
+            <h3>Classic Tee</h3>
+            <p>Price: $19.99</p>
+            <button>Add to Cart</button>
+        </div>
+        <div class="product-card" data-name="Smartwatch" data-price="199.99">
+            <img src="https://istarmax.com/wp-content/uploads/2023/02/GTS3-view-1-1024x1024.webp" alt="Smartwatch">
+            <h3>Smartwatch</h3>
+            <p>Price: $199.99</p>
+            <button>Add to Cart</button>
+        </div>
+        <div class="product-card" data-name="Running Shoes" data-price="89.99">
+            <img src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2019/03/04/17/mens-running-shoes-hero.jpg" alt="Running Shoes">
+            <h3>Running Shoes</h3>
+            <p>Price: $89.99</p>
+            <button>Add to Cart</button>
+        </div>
+        <div class="product-card" data-name="Noise-Cancelling Headphones" data-price="149.99">
+            <img src="https://top5bestproducts.com/wp-content/uploads/2018/12/71vlUfPeu-L._SL1280_.jpg" alt="Noise-Cancelling Headphones">
+            <h3>Noise-Cancelling Headphones</h3>
+            <p>Price: $149.99</p>
+            <button>Add to Cart</button>
+        </div>
+        <div class="product-card" data-name="Fitness Tracker" data-price="59.99">
+            <img src="https://www.popsci.com/wp-content/uploads/2023/09/22/best-cheap-fitness-trackers.jpg?auto=webp" alt="Fitness Tracker">
+            <h3>Fitness Tracker</h3>
+            <p>Price: $59.99</p>
+            <button>Add to Cart</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const searchInput = document.getElementById('search');
+const list = document.getElementById('autocomplete-list');
+const productCards = document.querySelectorAll('.product-card');
+
+// Build array of product names for frontend autocomplete
+const products = Array.from(productCards).map(card => card.dataset.name);
+
+searchInput.addEventListener('input', function() {
+    const term = this.value.toLowerCase();
+    list.innerHTML = '';
+    if (term.length < 1) return;
+
+    products.forEach(name => {
+        if (name.toLowerCase().includes(term)) {
+            const li = document.createElement('li');
+            li.textContent = name;
+            li.addEventListener('click', () => {
+                searchInput.value = name;
+                list.innerHTML = '';
+            });
+            list.appendChild(li);
+        }
+    });
+});
+</script>
+</body>
+</html>

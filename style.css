@@ -1,0 +1,76 @@
+/* Reset some defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body styling */
+body {
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Container */
+.container {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Title */
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #0078ff;
+}
+
+/* Form */
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.form textarea {
+  resize: none;
+  height: 100px;
+}
+
+/* Button */
+.btn {
+  background: #0078ff;
+  color: #fff;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn:hover {
+  background: #005fcc;
+}
+
+/* Product list */
+.product-list {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}

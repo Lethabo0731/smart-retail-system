@@ -1,0 +1,78 @@
+<?php
+session_start();
+require_once 'config.php';
+require_once 'helpers.php';
+$token = generate_csrf_token();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Smart Retail</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Checkout</h2>
+    <form id="checkout-form" name="checkoutForm" action="checkout.php" method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo e($token); ?>">
+        <input type="text" name="payment_method" placeholder="Payment Method (e.g., Credit Card)" required>
+        <div id="cart-items">
+            <!-- Example cart item -->
+            <div class="cart-item" data-price="50" data-product-id="1">
+                <span class="product-name">Product 1</span>
+                <label for="cart-qty-1" class="visually-hidden">Quantity</label>
+                <input type="number" id="cart-qty-1" class="cart-qty" value="1" min="1" placeholder="Quantity" title="Enter quantity">
+                <span class="item-stock">Checking stock...</span>
+                <span class="item-total">50.00</span>
+            </div>
+        </div>
+        <p>Total: <span id="cart-total">50.00</span></p>
+        <button type="submit">Pay Now</button>
+    </form>
+</div>
+
+<script>
+// Dynamic stock check and cart totals
+async function checkStock(item) {
+    const pid = item.dataset.productId;
+    const qty = parseInt(item.querySelector('.cart-qty').value);
+    if (!pid || qty < 1) return;
+    try {
+        const res = await fetch(`product_read.php?id=${pid}`);
+        const data = await res.json();
+        const stockElem = item.querySelector('.item-stock');
+        if (data.stock < qty) {
+            stockElem.textContent = `Only ${data.stock} in stock!`;
+            stockElem.style.color = 'red';
+        } else {
+            stockElem.textContent = `In stock: ${data.stock}`;
+            stockElem.style.color = 'green';
+        }
+    } catch (err) { console.error(err); }
+}
+
+function updateCartTotal() {
+    let total = 0;
+    document.querySelectorAll('.cart-item').forEach(item => {
+        const qty = parseInt(item.querySelector('.cart-qty').value);
+        const price = parseFloat(item.dataset.price);
+        item.querySelector('.item-total').textContent = (qty * price).toFixed(2);
+        total += qty * price;
+    });
+    document.getElementById('cart-total').textContent = total.toFixed(2);
+}
+
+// Attach events
+document.querySelectorAll('.cart-item').forEach(item => {
+    item.querySelector('.cart-qty').addEventListener('input', function() {
+        checkStock(item);
+        updateCartTotal();
+    });
+    checkStock(item);
+});
+updateCartTotal();
+</script>
+</body>
+</html>
